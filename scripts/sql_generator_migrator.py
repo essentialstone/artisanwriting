@@ -1,19 +1,17 @@
 
-file_pointer = './magic-flavor.txt'
-
+in_file = './magic-flavor.txt'
+out_file = './insert-magic-sentences.sql'
 
 def sql_gen(line):
-	table = 'Sentence'
-	cols = '(words,sourceId)'
-	return f'''INSERT INTO "{table}" {cols} VALUES ('{line}', 1);\n'''
+	return f'''INSERT INTO "Sentence" ("words", "sourceId") VALUES ('{line}', 1);\n'''
 
 def file_writer():
-	with open(file_pointer,'r+') as f:
+	with open(in_file,'r+') as f:
 		lines = f.readlines()
 		print('...ingesting {} words'.format(len(lines)))
-		with open('./insert-magic-sentences.sql','w+') as w:
+		with open(out_file,'w+') as w:
 			for line in lines:
-				w.write(sql_gen(line.strip('\n')))
+				w.write(sql_gen(line.strip()))
 			w.close()
 		f.close()
 
