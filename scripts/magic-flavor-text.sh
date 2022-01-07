@@ -7,4 +7,5 @@ curl https://mtgjson.com/api/v5/AllPrintings.json |
     sed 's/[^a-zA-Z ]//g' |
     sed 's/^[ ]*//g' |
     sort |
+    tr '[:upper:]' '[:lower:]' |
     uniq >magic-flavor.txt

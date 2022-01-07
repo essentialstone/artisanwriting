@@ -11,30 +11,38 @@ datasource db {
 }
 
 model Sentence {
-  id     Int      @id @default(autoincrement())
-  words  String   @unique
-  source String
-  Rating Rating[]
+  id       Int      @id @default(autoincrement())
+  words    String   @unique
+  Rating   Rating[]
+  Source   Source   @relation(fields: [sourceId], references: [id])
+  sourceId Int
+}
+
+model Source {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  sentences Sentence[]
 }
 
 model Rater {
-  id     Int      @id @default(autoincrement())
-  name   String   @unique
-  Rating Rating[]
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  ratings Rating[]
 }
 
 model Tag {
-  id     Int      @id @default(autoincrement())
-  name   String   @unique
-  Rating Rating[]
+  id      Int      @id @default(autoincrement())
+  name    String   @unique
+  ratings Rating[]
 }
 
 model Rating {
-  id         Int      @id @default(autoincrement())
-  rater      Rater    @relation(fields: [raterId], references: [id])
-  raterId    Int
-  sentence   Sentence @relation(fields: [sentenceId], references: [id])
-  sentenceId Int
-  tag        Tag      @relation(fields: [tagId], references: [id])
-  tagId      Int
+  id          Int      @id @default(autoincrement())
+  rater       Rater    @relation(fields: [raterId], references: [id])
+  raterId     Int
+  sentence    Sentence @relation(fields: [sentenceId], references: [id])
+  sentenceId  Int
+  tag         Tag      @relation(fields: [tagId], references: [id])
+  tagId       Int
+  explanation String
 }
