@@ -1,4 +1,6 @@
-curl https://mtgjson.com/api/v5/AllPrintings.json |
+curl https://mtgjson.com/api/v5/AllPrintings.json | jq . >all-printings.json
+
+cat all-printings.json |
     jq '.data | to_entries[].value.cards[].flavorText | select( . != null)' |
     sed 's/\\n/ /g' |
     sed 's/^"//g' |
