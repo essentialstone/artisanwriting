@@ -88,3 +88,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+magic-flavor.txt
+all-printings.json
