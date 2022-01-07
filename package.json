@@ -10,6 +10,7 @@
     "lint:js": "eslint --ext \".js,.vue\" --ignore-path .gitignore .",
     "lint": "npm run lint:js",
     "migrate:new": "prisma migrate dev --create-only",
+    "migrate:apply": "prisma migrate dev",
     "migrate:reset": "prisma migrate reset"
   },
   "dependencies": {

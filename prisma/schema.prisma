@@ -16,6 +16,7 @@ model Sentence {
   Rating   Rating[]
   Source   Source   @relation(fields: [sourceId], references: [id])
   sourceId Int
+  deleted  Boolean  @default(false)
 }
 
 model Source {
