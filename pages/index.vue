@@ -51,7 +51,18 @@ export default {
     raters: [],
     sources: [],
     iam: null,
+    stats: {},
   }),
+
+  computed: {
+    iamName() {
+      if (this.iam) {
+        return (
+          this.raters.filter((it) => it.id === this.iam).map((it) => it.name)[0] || ''
+        )
+      }
+    },
+  },
 
   methods: {
     sourceName(sentence) {
@@ -84,11 +95,18 @@ export default {
         this.sentences = await this.$axios.$get(`/api/raters/${this.iam}/sentences`)
       }
     },
+
+    async fetchRaterStats() {
+      if (this.iam) {
+        this.stats.raterTotal = await this.$axios.$get(`/api/raters/${this.iam}/total`)
+      }
+    },
   },
 
   watch: {
     iam(iam) {
       if (iam) {
+        this.fetchRaterStats()
         this.fetchSentences()
       }
     },

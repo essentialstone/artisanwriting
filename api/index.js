@@ -23,10 +23,20 @@ app.get('/sources', async (req, res) => {
   const sources = await prisma.source.findMany()
   res.json(sources)
 })
+app.get('/raters/:raterId/total', async (req, res) => {
+  const raterId = parseInt(req.params.raterId)
+
+  const ratingsCount = await prisma.rating.count({
+    where: {
+      raterId: raterId,
+    },
+  })
+
+  res.json(ratingsCount)
+})
 
 app.get('/raters/:raterId/sentences', async (req, res) => {
-  const { raterId } = req.params
-  const id = parseInt(raterId)
+  const raterId = parseInt(req.params.raterId)
   const sentences = await prisma.$queryRaw`
     SELECT *
     FROM "Sentence" AS s
@@ -37,7 +47,7 @@ app.get('/raters/:raterId/sentences', async (req, res) => {
         SELECT "sentenceId" 
         FROM "Rating" 
         WHERE 
-          "raterId" != ${id}
+          "raterId" != ${raterId}
       ) 
     ORDER BY random() 
     LIMIT ${pageSize}
