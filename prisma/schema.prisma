@@ -10,6 +10,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// datasource db {
+//   provider = "sqlite"
+//   url      = "file:./dev.db"
+// }
+
 model Sentence {
   id       Int      @id @default(autoincrement())
   words    String   @unique
@@ -45,5 +50,5 @@ model Rating {
   sentenceId  Int
   tag         Tag      @relation(fields: [tagId], references: [id])
   tagId       Int
-  explanation String
+  explanation String?
 }
