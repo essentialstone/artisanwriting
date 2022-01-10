@@ -90,5 +90,9 @@ sw.*
 *.swp
 
 magic-flavor.txt
+
 all-printings.json
+
 insert-magic-sentences.sql
+
+data/

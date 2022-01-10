@@ -69,7 +69,7 @@ export default {
       return (
         this.sources
           .filter((it) => !!it)
-          .filter((it) => it.id === sentence.sourceId)
+          .filter((it) => it.id === sentence.source_id)
           .map((it) => it.name)[0] || 'Unknown...'
       )
     },
@@ -78,13 +78,13 @@ export default {
       const ratings = this.sentences
         .filter((it) => it.tagIndex !== undefined)
         .map((it) => ({
-          sentenceId: it.id,
-          tagId: this.tags[it.tagIndex].id,
+          sentence_id: it.id,
+          tag_id: this.tags[it.tagIndex].id,
           explanation: it.explanation,
         }))
 
       if (ratings.length > 0) {
-        this.$axios.post(`/api/raters/${this.iam}/ratings`, ratings)
+        this.$http.post(`/api/raters/${this.iam}/ratings`, ratings)
       }
 
       this.fetchSentences()
@@ -92,13 +92,7 @@ export default {
 
     async fetchSentences() {
       if (this.iam) {
-        this.sentences = await this.$axios.$get(`/api/raters/${this.iam}/sentences`)
-      }
-    },
-
-    async fetchRaterStats() {
-      if (this.iam) {
-        this.stats.raterTotal = await this.$axios.$get(`/api/raters/${this.iam}/total`)
+        this.sentences = await this.$http.$get(`/api/raters/${this.iam}/sentences`)
       }
     },
   },
@@ -106,16 +100,15 @@ export default {
   watch: {
     iam(iam) {
       if (iam) {
-        this.fetchRaterStats()
         this.fetchSentences()
       }
     },
   },
 
   async mounted() {
-    this.tags = await this.$axios.$get('/api/tags')
-    this.raters = await this.$axios.$get('/api/raters')
-    this.sources = await this.$axios.$get('/api/sources')
+    this.tags = await this.$http.$get('/api/tags')
+    this.raters = await this.$http.$get('/api/raters')
+    this.sources = await this.$http.$get('/api/sources')
   },
 }
 </script>

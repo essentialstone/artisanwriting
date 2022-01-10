@@ -7,48 +7,53 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = env("DB_URL")
 }
 
-// datasource db {
-//   provider = "sqlite"
-//   url      = "file:./dev.db"
-// }
-
-model Sentence {
-  id       Int      @id @default(autoincrement())
-  words    String   @unique
-  Rating   Rating[]
-  Source   Source   @relation(fields: [sourceId], references: [id])
-  sourceId Int
-  deleted  Boolean  @default(false)
+model sentences {
+  id        Int       @id @default(autoincrement())
+  words     String    @unique
+  ratings   ratings[]
+  source    sources   @relation(fields: [source_id], references: [id])
+  source_id Int
+  deleted   Boolean   @default(false)
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt @default(now())
 }
 
-model Source {
-  id        Int        @id @default(autoincrement())
-  name      String     @unique
-  sentences Sentence[]
+model sources {
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  sentences sentences[]
+  created_at DateTime    @default(now())
+  updated_at DateTime    @updatedAt @default(now())
 }
 
-model Rater {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
-  ratings Rating[]
+model raters {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  ratings   ratings[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt @default(now())
 }
 
-model Tag {
-  id      Int      @id @default(autoincrement())
-  name    String   @unique
-  ratings Rating[]
+model tags {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  ratings   ratings[]
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt @default(now())
 }
 
-model Rating {
-  id          Int      @id @default(autoincrement())
-  rater       Rater    @relation(fields: [raterId], references: [id])
-  raterId     Int
-  sentence    Sentence @relation(fields: [sentenceId], references: [id])
-  sentenceId  Int
-  tag         Tag      @relation(fields: [tagId], references: [id])
-  tagId       Int
+model ratings {
+  id          Int       @id @default(autoincrement())
+  rater       raters    @relation(fields: [rater_id], references: [id])
+  rater_id    Int
+  sentence    sentences @relation(fields: [sentence_id], references: [id])
+  sentence_id Int
+  tag         tags      @relation(fields: [tag_id], references: [id])
+  tag_id      Int
   explanation String?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt @default(now())
 }

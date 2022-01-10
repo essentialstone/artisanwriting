@@ -10,25 +10,25 @@ app.use(express.json())
 app.use(bodyParser.json())
 
 app.get('/tags', async (req, res) => {
-  const tags = await prisma.tag.findMany()
+  const tags = await prisma.tags.findMany()
   res.json(tags)
 })
 
 app.get('/raters', async (req, res) => {
-  const raters = await prisma.rater.findMany()
+  const raters = await prisma.raters.findMany()
   res.json(raters)
 })
 
 app.get('/sources', async (req, res) => {
-  const sources = await prisma.source.findMany()
+  const sources = await prisma.sources.findMany()
   res.json(sources)
 })
 app.get('/raters/:raterId/total', async (req, res) => {
   const raterId = parseInt(req.params.raterId)
 
-  const ratingsCount = await prisma.rating.count({
+  const ratingsCount = await prisma.ratings.count({
     where: {
-      raterId: raterId,
+      rater_id: raterId,
     },
   })
 
@@ -39,15 +39,15 @@ app.get('/raters/:raterId/sentences', async (req, res) => {
   const raterId = parseInt(req.params.raterId)
   const sentences = await prisma.$queryRaw`
     SELECT *
-    FROM "Sentence" AS s
+    FROM "sentences" AS s
     WHERE 
       "deleted" = false 
     AND
       s.id NOT IN (
-        SELECT "sentenceId" 
-        FROM "Rating" 
+        SELECT "sentence_id" 
+        FROM "ratings" 
         WHERE 
-          "raterId" != ${raterId}
+          "rater_id" != ${raterId}
       ) 
     ORDER BY random() 
     LIMIT ${pageSize}
@@ -56,10 +56,10 @@ app.get('/raters/:raterId/sentences', async (req, res) => {
 })
 
 app.post('/raters/:raterId/ratings', async (req, res) => {
-  const raterId = parseInt(req.params.raterId)
-  const ratings = req.body.map((it) => ({ ...it, raterId }))
+  const rater_id = parseInt(req.params.raterId)
+  const ratings = req.body.map((it) => ({ ...it, rater_id }))
 
-  await prisma.rating.createMany({
+  await prisma.ratings.createMany({
     skipDuplicates: true,
     data: ratings,
   })

@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  artisanwriting:
+    image: artisanwriting
+
+    env_file:
+      # VIRTUAL_HOST=artisanwriting.test.local
+      # VIRTUAL_PORT=3000
+      #### Only set this if you want an ssl cert from lets encrypt
+      ### LETSENCRYPT_HOST=artisanwriting.test.local
+      # NUXT_HOST=0.0.0.0
+      # BROWSER_BASE_URL=http://artisanwriting.test.local
+      #### if LETSENCRYPT_HOST is set the we should use https
+      ### BROWSER_BASE_URL=https://artisanwriting.test.local
+      - .env
+    
+    secrets:
+      - postgres_user
+      - postgres_password
+
+    networks:
+      - ingress-net
+      - postgres-net
+
+secrets:
+  postgres_user:
+    external: true
+  
+  postgres_password:
+    external: true
+
+networks:
+  ingress-net:
+    external: true
+  
+  postgres-net:
+    external: true
