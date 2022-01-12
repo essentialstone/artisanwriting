@@ -10,50 +10,58 @@ datasource db {
   url      = env("DB_URL")
 }
 
-model sentences {
-  id        Int       @id @default(autoincrement())
-  words     String    @unique
-  ratings   ratings[]
-  source    sources   @relation(fields: [source_id], references: [id])
-  source_id Int
-  deleted   Boolean   @default(false)
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt @default(now())
+model sentence {
+  id         Int      @id @default(autoincrement())
+  words      String   @unique
+  ratings    rating[]
+  source     source   @relation(fields: [source_id], references: [id])
+  source_id  Int
+  deleted    Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 }
 
-model sources {
-  id        Int         @id @default(autoincrement())
-  name      String      @unique
-  sentences sentences[]
-  created_at DateTime    @default(now())
-  updated_at DateTime    @updatedAt @default(now())
+model source {
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  sentences  sentence[]
+  created_at DateTime   @default(now())
+  updated_at DateTime   @default(now()) @updatedAt
 }
 
-model raters {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  ratings   ratings[]
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt @default(now())
+model rater {
+  id         Int      @id @default(autoincrement())
+  name       String   @unique
+  ratings    rating[]
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
 }
 
-model tags {
-  id        Int       @id @default(autoincrement())
-  name      String    @unique
-  ratings   ratings[]
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt @default(now())
+model tag {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  description String?
+  ratings     tag_rating[]
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @default(now()) @updatedAt
 }
 
-model ratings {
-  id          Int       @id @default(autoincrement())
-  rater       raters    @relation(fields: [rater_id], references: [id])
+model rating {
+  id          Int          @id @default(autoincrement())
+  rater       rater        @relation(fields: [rater_id], references: [id])
   rater_id    Int
-  sentence    sentences @relation(fields: [sentence_id], references: [id])
+  sentence    sentence     @relation(fields: [sentence_id], references: [id])
   sentence_id Int
-  tag         tags      @relation(fields: [tag_id], references: [id])
-  tag_id      Int
+  tags        tag_rating[]
   explanation String?
-  created_at   DateTime  @default(now())
-  updated_at   DateTime  @updatedAt @default(now())
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @default(now()) @updatedAt
+}
+
+model tag_rating {
+  id        Int    @id @default(autoincrement())
+  tag       tag    @relation(fields: [tag_id], references: [id])
+  tag_id    Int
+  rating    rating @relation(fields: [rating_id], references: [id])
+  rating_id Int
 }

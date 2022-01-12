@@ -12,21 +12,21 @@
 
     <v-card v-for="sentence in sentences" :key="sentence.id" class="mb-3" outlined>
       <v-container>
-        <v-card-title> {{ sourceName(sentence) }} </v-card-title>
+        <v-card-title> {{ sentence.source_name }} </v-card-title>
 
         <v-card-text>
           <p>
             {{ sentence.words }}
           </p>
 
-          <v-chip-group v-model="sentence.tagIndex">
+          <v-chip-group v-model="sentence.tags" multiple>
             <v-chip v-for="tag in tags" :key="tag.id" outlined filter>
               {{ tag.name }}
             </v-chip>
           </v-chip-group>
 
           <v-text-field
-            v-if="sentence.tagIndex !== undefined"
+            v-if="sentence.tags !== undefined"
             v-model="sentence.explanation"
             label="WHy? (Optional)"
             placeholder="Becuase I rool and you drool!"
@@ -76,11 +76,13 @@ export default {
 
     submit() {
       const ratings = this.sentences
-        .filter((it) => it.tagIndex !== undefined)
+        .filter((it) => it.tags)
+        .filter((it) => it.tags.length > 0)
         .map((it) => ({
           sentence_id: it.id,
-          tag_id: this.tags[it.tagIndex].id,
+          source_id: it.source_id,
           explanation: it.explanation,
+          tags: this.tagIndexToId(it.tags),
         }))
 
       if (ratings.length > 0) {
@@ -90,9 +92,16 @@ export default {
       this.fetchSentences()
     },
 
+    tagIndexToId(indexes) {
+      return indexes
+        .map((index) => this.tags[index])
+        .filter(it => it)
+        .map(it => it.id)
+    },
+
     async fetchSentences() {
       if (this.iam) {
-        this.sentences = await this.$http.$get(`/api/raters/${this.iam}/sentences`)
+        this.sentences = await this.$http.$get(`/api/sentences`)
       }
     },
   },
@@ -106,6 +115,8 @@ export default {
   },
 
   async mounted() {
+    console.log(this.$http.getBaseURL())
+
     this.tags = await this.$http.$get('/api/tags')
     this.raters = await this.$http.$get('/api/raters')
     this.sources = await this.$http.$get('/api/sources')

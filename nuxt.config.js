@@ -23,6 +23,12 @@ export default {
     },
   },
 
+  privateRuntimeConfig: {
+    http: {
+      baseURL: process.env.BASE_URL
+    }
+  },
+
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 

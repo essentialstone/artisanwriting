@@ -4,67 +4,136 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 const app = express()
-const pageSize = 3
 
 app.use(express.json())
 app.use(bodyParser.json())
 
+function getNumber(str) {
+  const i = parseInt(str)
+  if (isNaN(i)) {
+    return null
+  }
+  if (`${i}` !== str) {
+    return null
+  }
+  return i
+}
+
+function getTagRatings(ratingId, tagIds) {
+  return tagIds.map((it) => ({
+    rating_id: ratingId,
+    tag_id: it,
+  }))
+}
+
 app.get('/tags', async (req, res) => {
-  const tags = await prisma.tags.findMany()
+  const tags = await prisma.tag.findMany()
   res.json(tags)
 })
 
 app.get('/raters', async (req, res) => {
-  const raters = await prisma.raters.findMany()
+  const raters = await prisma.rater.findMany()
   res.json(raters)
 })
 
 app.get('/sources', async (req, res) => {
-  const sources = await prisma.sources.findMany()
+  const sources = await prisma.source.findMany()
   res.json(sources)
 })
-app.get('/raters/:raterId/total', async (req, res) => {
-  const raterId = parseInt(req.params.raterId)
 
-  const ratingsCount = await prisma.ratings.count({
-    where: {
-      rater_id: raterId,
-    },
-  })
+app.get('/sentences', async (req, res) => {
+  const defaultPageSize = 3
+  const count = getNumber(req.params.count) || defaultPageSize
 
-  res.json(ratingsCount)
-})
-
-app.get('/raters/:raterId/sentences', async (req, res) => {
-  const raterId = parseInt(req.params.raterId)
   const sentences = await prisma.$queryRaw`
-    SELECT *
-    FROM "sentences" AS s
-    WHERE 
-      "deleted" = false 
+    SELECT
+      stc.id id,
+      stc.words words,
+      src.id source_id,
+      src.name source_name
+    FROM sentence stc
+    JOIN source src 
+    ON 
+      stc.deleted = false
     AND
-      s.id NOT IN (
-        SELECT "sentence_id" 
-        FROM "ratings" 
-        WHERE 
-          "rater_id" != ${raterId}
-      ) 
+      stc.source_id = src.id
     ORDER BY random() 
-    LIMIT ${pageSize}
+    LIMIT ${count};
   `
   res.json(sentences)
 })
 
 app.post('/raters/:raterId/ratings', async (req, res) => {
-  const rater_id = parseInt(req.params.raterId)
-  const ratings = req.body.map((it) => ({ ...it, rater_id }))
+  const rater_id = getNumber(req.params.raterId)
 
-  await prisma.ratings.createMany({
-    skipDuplicates: true,
-    data: ratings,
-  })
+  const ratings = req.body.map((rating) => ({
+    rater_id: rater_id,
+    sentence_id: rating.sentence_id,
+    explanation: rating.explanation,
+    tags: {
+      create: rating.tags.map((tag_id) => ({
+        tag: {
+          connect: {
+            id: tag_id,
+          },
+        },
+      })),
+    },
+  }))
+
+  for (let rating of ratings) {
+    await prisma.rating.create({
+      data: rating,
+    })
+  }
 
   res.end()
+})
+
+app.get('/ratings', async (req, res) => {
+  const ratings = await prisma.rating.findMany({
+    include: {
+      rater: true,
+      sentence: {
+        include: {
+          source: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: true,
+        },
+      },
+    },
+  })
+
+  res.json(ratings)
+})
+
+app.get('/ratings/:raterId', async (req, res) => {
+  const rater_id = getNumber(req.params.raterId)
+
+  const ratings = await prisma.rating.findMany({
+    where: {
+      rater_id: rater_id,
+    },
+
+    include: {
+      rater: true,
+      sentence: {
+        include: {
+          source: true,
+        },
+      },
+      tags: {
+        select: {
+          tag: true,
+        },
+      },
+    },
+  })
+
+  res.json(ratings)
 })
 
 /**
