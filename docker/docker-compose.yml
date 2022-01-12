@@ -7,7 +7,7 @@ services:
     env_file:
       # VIRTUAL_HOST=artisanwriting.example.com
       # VIRTUAL_PORT=3000
-      #LETSENCRYPT_HOST=artisanwriting.example.com
+      # LETSENCRYPT_HOST=artisanwriting.example.com
       # NUXT_HOST=0.0.0.0
       # BROWSER_BASE_URL=https://artisanwriting.example.com
       - .env
