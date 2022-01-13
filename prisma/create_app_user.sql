@@ -16,6 +16,9 @@ ALTER DEFAULT PRIVILEGES GRANT ALL ON SEQUENCES TO artisanwriting_admin;
 GRANT ALL ON ALL TABLES IN SCHEMA public TO artisanwriting_admin;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO artisanwriting_admin;
 
+-- grant admin rights to app
+GRANT artisanwriting_admin TO artisanwriting_app;
+
 -- create a new admin user
 CREATE ROLE admin_user LOGIN PASSWORD 'changeme' INHERIT;
 GRANT artisanwriting_admin TO admin_user;
