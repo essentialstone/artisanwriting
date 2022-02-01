@@ -19,7 +19,7 @@
             {{ sentence.words }}
           </p>
 
-          <v-chip-group v-model="sentence.tags" multiple>
+          <v-chip-group v-model="sentence.tags" multiple column>
             <v-chip v-for="tag in tags" :key="tag.id" outlined filter>
               {{ tag.name }}
             </v-chip>
