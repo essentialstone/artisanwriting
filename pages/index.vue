@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-container>
     <v-autocomplete
       label="Who are you?"
       v-model="iam"
@@ -40,7 +40,7 @@
         Next
       </v-btn>
     </v-row>
-  </div>
+  </v-container>
 </template>
 
 <script>
