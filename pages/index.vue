@@ -17,7 +17,7 @@
         <v-list-item v-for="tag in tags" :key="tag.id" two-line>
           <v-list-item-content>
             <v-list-item-title>{{tag.name}}</v-list-item-title>
-            <v-list-item-subtitle>{{tag.description || "Sorry, Jake needs to add a description for this tag."}}</v-list-item-subtitle>
+            <v-list-item-content>{{tag.description || "Sorry, Jake needs to add a description for this tag."}}</v-list-item-content>
           </v-list-item-content>
         </v-list-item>
       </v-card-text>
