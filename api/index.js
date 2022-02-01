@@ -27,7 +27,11 @@ function getTagRatings(ratingId, tagIds) {
 }
 
 app.get('/tags', async (req, res) => {
-  const tags = await prisma.tag.findMany()
+  const tags = await prisma.tag.findMany({
+    where: {
+      hidden: false,
+    },
+  })
   res.json(tags)
 })
 
