@@ -9,6 +9,19 @@
       rounded
       solo
     />
+    <v-card class="mb-3" outlined>
+      <v-card-title>
+        Tags
+      </v-card-title>
+      <v-card-text>
+        <v-list-item v-for="tag in tags" :key="tag.id" two-line>
+          <v-list-item-content>
+            <v-list-item-title>{{tag.name}}</v-list-item-title>
+            <v-list-item-subtitle>{{tag.description || "Sorry, Jake needs to add a description for this tag."}}</v-list-item-subtitle>
+          </v-list-item-content>
+        </v-list-item>
+      </v-card-text>
+    </v-card>
 
     <v-card v-for="sentence in sentences" :key="sentence.id" class="mb-3" outlined>
       <v-container>
