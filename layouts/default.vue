@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app dense>
-      <v-toolbar-title>Essential Stone</v-toolbar-title>
+      <v-toolbar-title>The Shattering</v-toolbar-title>
 
       <v-spacer />
 
