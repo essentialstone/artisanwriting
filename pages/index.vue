@@ -11,7 +11,7 @@
         </v-expansion-panel-header>
 
         <v-expansion-panel-content>
-          <v-list-item v-for="tag in tags" :key="tag.id" two-line>
+          <v-list-item v-for="tag in sortedTags" :key="tag.id" two-line>
             <v-list-item-content>
               <v-list-item-title>{{ tag.name }}</v-list-item-title>
               <v-list-item-content>{{
@@ -70,6 +70,10 @@ export default {
   computed: {
     validRater() {
       return this.iam && this.iam.id !== null
+    },
+
+    sortedTags() {
+      return this.tags.sort((a, b) => a.id - b.id)
     },
 
     ...mapState(['iam']),

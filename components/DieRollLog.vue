@@ -31,7 +31,7 @@ export default {
       { text: 'Player', value: 'player' },
       { text: 'Roll', value: 'input' },
       { text: 'Results', value: 'result' },
-    //   { text: 'Summary', value: 'summary' },
+      //   { text: 'Summary', value: 'summary' },
       { text: 'Total', value: 'total' },
       { text: '', value: 'reroll', sortable: false, width: '3rem', align: 'end' },
     ],
