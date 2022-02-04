@@ -2,22 +2,6 @@
   <v-container>
     <roller-input ref="roller" @roll="handleRoll" />
 
-    <!-- <v-card rounded>
-      <v-list v-if="log.length > 0">
-        <v-list-item-group>
-          <v-list-item v-for="(roll, i) in log" :key="i" @click="reroll(roll)">
-            <v-list-item-icon>
-              <v-icon dark> mdi-dice-multiple </v-icon>
-            </v-list-item-icon>
-
-            <v-list-item-content>
-              {{ roll }}
-            </v-list-item-content>
-          </v-list-item>
-        </v-list-item-group>
-      </v-list>
-    </v-card> -->
-
     <die-roll-log :rolls="log" @roll="reroll" />
   </v-container>
 </template>
@@ -27,6 +11,10 @@ import { mapState } from 'vuex'
 import { parseRoll } from '~/lib/roller.js'
 
 export default {
+  head: () => ({
+    title: 'Game Room',
+  }),
+
   data: () => ({
     socket: null,
     log: [],
