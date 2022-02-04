@@ -1,27 +1,27 @@
 <template>
   <v-container>
-    <v-autocomplete
-      label="Who are you?"
-      v-model="iam"
-      :items="raters"
-      item-value="id"
-      item-text="name"
-      rounded
-      solo
-    />
-    <v-card class="mb-3" outlined>
-      <v-card-title>
-        Tags
-      </v-card-title>
-      <v-card-text>
-        <v-list-item v-for="tag in tags" :key="tag.id" two-line>
-          <v-list-item-content>
-            <v-list-item-title>{{tag.name}}</v-list-item-title>
-            <v-list-item-content>{{tag.description || "Sorry, Jake needs to add a description for this tag."}}</v-list-item-content>
-          </v-list-item-content>
-        </v-list-item>
-      </v-card-text>
-    </v-card>
+    <v-expansion-panels class="mb-3" hover>
+      <v-expansion-panel>
+        <v-expansion-panel-header disable-icon-rotate>
+          Tag Details
+
+          <template #actions>
+            <v-icon> mdi-information-outline </v-icon>
+          </template>
+        </v-expansion-panel-header>
+
+        <v-expansion-panel-content>
+          <v-list-item v-for="tag in tags" :key="tag.id" two-line>
+            <v-list-item-content>
+              <v-list-item-title>{{ tag.name }}</v-list-item-title>
+              <v-list-item-content>{{
+                tag.description || 'Sorry, Jake needs to add a description for this tag.'
+              }}</v-list-item-content>
+            </v-list-item-content>
+          </v-list-item>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
 
     <v-card v-for="sentence in sentences" :key="sentence.id" class="mb-3" outlined>
       <v-container>
@@ -49,7 +49,7 @@
     </v-card>
 
     <v-row justify="end">
-      <v-btn v-if="iam" outlined rounded text x-large class="mt-6" @click="submit">
+      <v-btn v-if="validRater" outlined rounded text x-large class="mt-6" @click="submit">
         Next
       </v-btn>
     </v-row>
@@ -57,24 +57,22 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 export default {
   data: () => ({
     sentences: [],
     tags: [],
     raters: [],
     sources: [],
-    iam: null,
     stats: {},
   }),
 
   computed: {
-    iamName() {
-      if (this.iam) {
-        return (
-          this.raters.filter((it) => it.id === this.iam).map((it) => it.name)[0] || ''
-        )
-      }
+    validRater() {
+      return this.iam && this.iam.id !== null
     },
+
+    ...mapState(['iam']),
   },
 
   methods: {
@@ -99,7 +97,7 @@ export default {
         }))
 
       if (ratings.length > 0) {
-        this.$http.post(`/api/raters/${this.iam}/ratings`, ratings)
+        this.$http.post(`/api/raters/${this.iam.id}/ratings`, ratings)
       }
 
       this.fetchSentences()
@@ -108,8 +106,8 @@ export default {
     tagIndexToId(indexes) {
       return indexes
         .map((index) => this.tags[index])
-        .filter(it => it)
-        .map(it => it.id)
+        .filter((it) => it)
+        .map((it) => it.id)
     },
 
     async fetchSentences() {
@@ -121,18 +119,21 @@ export default {
 
   watch: {
     iam(iam) {
-      if (iam) {
+      if (this.validRater) {
         this.fetchSentences()
+      } else {
+        this.sentences = []
       }
     },
   },
 
   async mounted() {
-    console.log(this.$http.getBaseURL())
-
     this.tags = await this.$http.$get('/api/tags')
-    this.raters = await this.$http.$get('/api/raters')
     this.sources = await this.$http.$get('/api/sources')
+
+    if (this.validRater) {
+      this.fetchSentences()
+    }
   },
 }
 </script>

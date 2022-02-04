@@ -19,13 +19,6 @@ function getNumber(str) {
   return i
 }
 
-function getTagRatings(ratingId, tagIds) {
-  return tagIds.map((it) => ({
-    rating_id: ratingId,
-    tag_id: it,
-  }))
-}
-
 app.get('/tags', async (req, res) => {
   const tags = await prisma.tag.findMany({
     where: {
