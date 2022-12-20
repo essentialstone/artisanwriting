@@ -1,7 +1,7 @@
 with cte1 as 
 (
 select
- t3.words,
+ t3.words as words,
  t2.name as r_user,
  t4.rating_id,
  t5.name tagname,
@@ -13,4 +13,4 @@ join tag_rating t4 on t1.id = t4.id
 join tag t5 on t4.tag_id = t5.id
 )
 
-select tagname as tag, count(*) as TotalRated from cte1 group by tagname order by TotalRated desc
+select words,tagname from cte1 where tagname in ('Tapestry','NONE')

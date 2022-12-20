@@ -34,7 +34,6 @@ updated_at	timestamp(3) [CURRENT_TIMESTAMP]
 
 sentence
 
-
 id	integer Auto Increment [nextval('sentence_id_seq')]	
 words	text	
 source_id	integer	

@@ -1,3 +1,4 @@
+CREATE or replace VIEW user_vote_breakdown as (
 with cte1 as 
 (
 select
@@ -15,33 +16,46 @@ join tag t5 on t4.tag_id = t5.id
 
 breakdown as 
 (
-select r_user,
+select r_user as User,
 (Select count(*) from cte1 where tagname ='Light' and  r_user = 'David') as Light,
 (Select count(*) from cte1 where tagname ='Crystal' and  r_user = 'David') as Crystal,
 (Select count(*) from cte1 where tagname ='Tapestry' and  r_user = 'David') as Tapestry,
 (Select count(*) from cte1 where tagname ='Void' and  r_user = 'David') as Void, 
-(Select count(*) from cte1 where r_user = 'David') as Total from cte1 where r_user = 'David' group by r_user
+(Select count(*) from cte1 where r_user = 'David' and tagname in ('Light','Tapestry','Crystal','Void')) as TotalRelevant,
+(Select count(*) from cte1 where r_user	= 'David') as TotalForUser from cte1 where r_user = 'David' group by r_user
 union
-select r_user,
+select r_user as User,
 (Select count(*) from cte1 where tagname ='Light' and  r_user = 'Jeremy') as Light,
 (Select count(*) from cte1 where tagname ='Crystal' and  r_user = 'Jeremy') as Crystal,
 (Select count(*) from cte1 where tagname ='Tapestry' and  r_user = 'Jeremy') as Tapestry,
 (Select count(*) from cte1 where tagname ='Void' and  r_user = 'Jeremy') as Void,
-(Select count(*) from cte1 where r_user = 'Jeremy') as Total  from cte1 where r_user = 'Jeremy' group by r_user
+(Select count(*) from cte1 where r_user = 'Jeremy' and tagname in ('Light','Tapestry','Crystal','Void')) as TotalRelevant,
+(Select count(*) from cte1 where r_user	= 'Jeremy') as TotalForUser from cte1 where r_user = 'Jeremy' group by r_user
 union
-select r_user,
+select r_user as User,
 (Select count(*) from cte1 where tagname ='Light' and  r_user = 'James') as Light,
 (Select count(*) from cte1 where tagname ='Crystal' and  r_user = 'James') as Crystal,
 (Select count(*) from cte1 where tagname ='Tapestry' and  r_user = 'James') as Tapestry,
 (Select count(*) from cte1 where tagname ='Void' and  r_user = 'James') as Void,
-(Select count(*) from cte1 where r_user = 'James') as Total from cte1 where r_user = 'James' group by r_user
+(Select count(*) from cte1 where r_user = 'James' and tagname in ('Light','Tapestry','Crystal','Void')) as TotalRelevant,
+(Select count(*) from cte1 where r_user	= 'James') as TotalForUser from cte1 where r_user = 'James' group by r_user
 union
-select r_user,
+select r_user as User,
 (Select count(*) from cte1 where tagname ='Light' and  r_user = 'Jake') as Light,
 (Select count(*) from cte1 where tagname ='Crystal' and  r_user = 'Jake') as Crystal,
 (Select count(*) from cte1 where tagname ='Tapestry' and  r_user = 'Jake') as Tapestry,
 (Select count(*) from cte1 where tagname ='Void' and  r_user = 'Jake') as Void,
-(Select count(*) from cte1 where r_user = 'Jake') as Total  from cte1 where r_user = 'Jake' group by r_user
+(Select count(*) from cte1 where r_user = 'Jake' and tagname in ('Light','Tapestry','Crystal','Void')) as TotalRelevant,
+(Select count(*) from cte1 where r_user	= 'Jake') as TotalForUser  from cte1 where r_user = 'Jake' group by r_user
+union
+select r_user as User,
+(Select count(*) from cte1 where tagname ='Light' and  r_user = 'Ethan') as Light,
+(Select count(*) from cte1 where tagname ='Crystal' and  r_user = 'Ethan') as Crystal,
+(Select count(*) from cte1 where tagname ='Tapestry' and  r_user = 'Ethan') as Tapestry,
+(Select count(*) from cte1 where tagname ='Void' and  r_user = 'Ethan') as Void,
+(Select count(*) from cte1 where r_user = 'Ethan' and tagname in ('Light','Tapestry','Crystal','Void')) as TotalRelevant,
+(Select count(*) from cte1 where r_user	= 'Ethan') as TotalForUser  from cte1 where r_user = 'Ethan' group by r_user
 )
 
-Select * from breakdown order by Total desc
+Select * from breakdown order by TotalRelevant desc
+)
