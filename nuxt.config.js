@@ -3,8 +3,7 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - artisanwriting',
-    title: 'artisanwriting',
+    titleTemplate: '%s - The Shattering',
     htmlAttrs: {
       lang: 'en',
     },
@@ -25,15 +24,17 @@ export default {
 
   privateRuntimeConfig: {
     http: {
-      baseURL: process.env.BASE_URL
-    }
+      baseURL: process.env.BASE_URL,
+    },
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    '~/plugins/vuelidate.js'
+  ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -51,7 +52,21 @@ export default {
     // https://go.nuxtjs.dev/axios
     // '@nuxtjs/axios',
     '@nuxt/http',
+
+    // https://nuxt-socket-io.netlify.app/
+    'nuxt-socket-io',
   ],
+
+  // socket.io config
+  io: {
+    sockets: [ // Required
+      { // At least one entry is required
+        name: 'home',
+        url: process.env.BROWSER_BASE_URL,
+        default: true,
+      }
+    ]
+  },
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   // axios: {},

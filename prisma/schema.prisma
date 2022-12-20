@@ -41,6 +41,7 @@ model tag {
   id          Int          @id @default(autoincrement())
   name        String       @unique
   description String?
+  hidden      Boolean      @default(false)
   ratings     tag_rating[]
   created_at  DateTime     @default(now())
   updated_at  DateTime     @default(now()) @updatedAt

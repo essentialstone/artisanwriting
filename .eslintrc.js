@@ -2,15 +2,12 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    node: true
+    node: true,
   },
-  extends: [
-    '@nuxtjs/eslint-config-typescript',
-    'plugin:nuxt/recommended',
-    'prettier'
-  ],
-  plugins: [
-  ],
+  extends: ['@nuxtjs/eslint-config-typescript', 'plugin:nuxt/recommended', 'prettier'],
+  plugins: [],
   // add your custom rules here
-  rules: {}
+  rules: {
+    'vue/valid-v-slot': ['error', { allowModifiers: true }],
+  },
 }
