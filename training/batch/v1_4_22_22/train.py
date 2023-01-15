@@ -15,7 +15,7 @@ def timer(func):
 	return wrapper
 
 
-train_csv_str='./csv/v1_4_22_22/'
+train_csv_str='./batch/v1_4_22_22/'
 
 csv_list=os.listdir(train_csv_str)
 
